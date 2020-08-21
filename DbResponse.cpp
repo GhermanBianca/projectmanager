@@ -27,4 +27,5 @@ void DbResponse::ConnectionFunction() {
         else {
             cout << "Failed To Connect!" << mysql_errno(conn) << endl;
         }
+    mysql_close(conn);
 }
