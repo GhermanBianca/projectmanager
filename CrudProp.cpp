@@ -2,9 +2,11 @@
 #include "DbResponse.hpp"
 #include "DisplayMenuProp.hpp"
 
-#include <iostream>
 #include <mysql/mysql.h>
+
+#include <iostream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -44,8 +46,7 @@ void CrudProp::DisplayProperties() {
 
     char choose;
     int propID;  
-    string items[5000];
-    int indexForId = 0;
+    std::vector <string> items;
     bool HaveException = false;
     bool NotInDatabase = false;
 
@@ -55,41 +56,40 @@ void CrudProp::DisplayProperties() {
         cin >> propID;
         cout << endl;
     } catch(exception e){
-        cout << "Please enter a valid number." << endl;
-        HaveException = true;
+        DisplayMenuProp::DisplayMenu();
     }
     if(HaveException == false) {
-        for(int i = 0; i < indexForId; i++) {
-            if(propID != items[i]) {
+        for(auto &i : items) {
+            if(to_string(propID) != i) {
                 NotInDatabase = true;
             } else {
                 NotInDatabase = false;
             }
         }
 
-        if(NotInDatabase == false) {
-            string findbyid_query = "SELECT PropertyProductID, PropertyName, PropertyValue FROM propertyproduct WHERE PropertyProductID = '" + to_string(propID) +"' ";
-            const char* qi = findbyid_query.c_str();
-            qstate = mysql_query(conn, qi);
+    if(NotInDatabase == false) {
+        string findbyid_query = "SELECT PropertyProductID, PropertyName, PropertyValue FROM propertyproduct WHERE PropertyProductID = '" + to_string(propID) +"' ";
+        const char* qi = findbyid_query.c_str();
+        qstate = mysql_query(conn, qi);
 
-            if(!qstate) {
-                res = mysql_store_result(conn);
-                cout << endl;
-                while ((row = mysql_fetch_row(res))) {
-                    cout << "PropertyProductID: " << row[0] << "\nPropertyName: " << row[1] << "\nPropertyValue: " << row[2] << endl;
-                }
-            } else {
-                cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            }
+    if(!qstate) {
+        res = mysql_store_result(conn);
+        cout << endl;
+        while ((row = mysql_fetch_row(res))) {
+            cout << "PropertyProductID: " << row[0] << "\nPropertyName: " << row[1] << "\nPropertyValue: " << row[2] << endl;
         }
+    } else {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+        }
+    }
 
-        cout << "\n";
-        cout << "Press 'q' to Exit or any other key to Main Menu:\n";
-        cin >> choose;
-        if (choose == 'q' || choose == 'Q') {
-            exit(0);
-        } else {
-            DisplayMenuProp::DisplayMenu();
+    cout << "\n";
+    cout << "Press 'q' to Exit or any other key to Main Menu:\n";
+    cin >> choose;
+    if (choose == 'q' || choose == 'Q') {
+        exit(0);
+    } else {
+        DisplayMenuProp::DisplayMenu();
         }
     }
 }
@@ -99,8 +99,7 @@ void CrudProp::UpdateProperties(){
 
     string name;
     string value;
-    string items[5000];
-    int indexForId = 0;
+    std::vector<string> items;
     int propID;
     int choose;
     bool HaveException = false;
@@ -118,8 +117,6 @@ void CrudProp::UpdateProperties(){
         cout << "PropertyProductID\tPropertyName\tPropertyValue\n" << endl;
         while ((row = mysql_fetch_row(res))) {
             cout << row[0] << "\t" << row[1] << "\t" << row[2] << endl;
-            items[indexForId] = row[0];
-            indexForId++;
         }
     } else {
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
@@ -131,64 +128,63 @@ void CrudProp::UpdateProperties(){
         cout << endl;
     } catch(exception e){
         cout << "Please enter a valid number." << endl;
-        HaveException = true;
+        DisplayMenuProp::DisplayMenu();
     }
     if(HaveException == false) {
-        for(int i = 0; i < indexForId; i++) {
-            if(strID != items[i]) {
+        for(auto &i : items) {
+            if(to_string(propID) != i) {
                 NotInDatabase = true;
             } else {
                 NotInDatabase = false;
             }
         }
 
-        string findbyid_query = "SELECT PropertyProductID, PropertyName, PropertyValue FROM propertyproduct WHERE PropertyProductID = '" + to_string(propID) +"' ";
-        const char* qi = findbyid_query.c_str();
-        qstate = mysql_query(conn, qi);
+    string findbyid_query = "SELECT PropertyProductID, PropertyName, PropertyValue FROM propertyproduct WHERE PropertyProductID = '" + to_string(propID) +"' ";
+    const char* qi = findbyid_query.c_str();
+    qstate = mysql_query(conn, qi);
 
-        if(!qstate) {
-        res = mysql_store_result(conn);
-        cout << endl;
-        while ((row = mysql_fetch_row(res))) {
-            cout << "PropertyProductID: " << row[0] << "\nPropertyName: " << row[1] << "\nPropertyValue: " << row[2] << endl;
-            storeid = row[0];
-            storename = row [1];
-            storevalue = row [2];
-            }
-        } else 
-            {
-                cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-            }
+    if(!qstate) {
+    res = mysql_store_result(conn);
+    cout << endl;
+    while ((row = mysql_fetch_row(res))) {
+        cout << "PropertyProductID: " << row[0] << "\nPropertyName: " << row[1] << "\nPropertyValue: " << row[2] << endl;
+        storeid = row[0];
+        storename = row [1];
+        storevalue = row [2];
+        }
+    } else {
+        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+        }
         
-        cin.ignore(1, '\n');
-        cout << "Enter new property name: ";
-        getline(cin, name);
-        if (name == "0" || name.empty()) {
-            name = storename;
-        }
-        cout << "Enter new property value: ";
-        getline(cin, value);
-        if (value == "0" || name.empty()) {
-            value = storevalue;
-        }
+    cin.ignore(1, '\n');
+    cout << "Enter new property name: ";
+    getline(cin, name);
+    if (name == "0" || name.empty()) {
+        name = storename;
+    }
+    cout << "Enter new property value: ";
+    getline(cin, value);
+    if (value == "0" || name.empty()) {
+        value = storevalue;
+    }
             
-        string update_query = "UPDATE propertyproduct SET PropertyName = '" + name + "', PropertyValue = '" + value + "' WHERE PropertyProductID = '" + to_string(propID) + "' ";
-        const char* qu = update_query.c_str();
-        qstate = mysql_query(conn, qu);
+    string update_query = "UPDATE propertyproduct SET PropertyName = '" + name + "', PropertyValue = '" + value + "' WHERE PropertyProductID = '" + to_string(propID) + "' ";
+    const char* qu = update_query.c_str();
+    qstate = mysql_query(conn, qu);
 
-        if (!qstate) {
-            cout << endl << "Successfully Saved In Database." << endl;
-        } else {
-            cout << "Failed tu Update." << endl;
-        }
+    if (!qstate) {
+        cout << endl << "Successfully Saved In Database." << endl;
+    } else {
+        cout << "Failed tu Update." << endl;
+    }
      
-        cout << "\n";
-        cout << "Press 'q' to Exit or any other key to Main Menu:\n";
-        cin >> choose;
-        if (choose == 'q' || choose == 'Q') {
-            exit(0);
-        } else {
-            DisplayMenuProp::DisplayMenu();
+    cout << "\n";
+    cout << "Press 'q' to Exit or any other key to Main Menu:\n";
+    cin >> choose;
+    if (choose == 'q' || choose == 'Q') {
+        exit(0);
+    } else {
+        DisplayMenuProp::DisplayMenu();
         }
     }
 }
@@ -198,9 +194,8 @@ void CrudProp::DeleteProperties() {
 
     string name;
     string value;
-    string items[5000];
     char choose;
-    int indexForId = 0;
+    std::vector<string> items;
     int propID;
     bool HaveException = false;
     bool NotInDatabase = false;
@@ -213,8 +208,6 @@ void CrudProp::DeleteProperties() {
         cout << "PropertyProductID\tPropertyName\tPropertyValue\n" << endl;
         while ((row = mysql_fetch_row(res))) {
             cout << row[0] << "\t" << row[1] << "\t" << row[2] << endl;
-            items[indexForId] = row[0];
-            indexForId++;
         }
     } else {
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
@@ -226,11 +219,11 @@ void CrudProp::DeleteProperties() {
         cout << endl;
     } catch(exception e){
         cout << "Please enter a valid number." << endl;
-        HaveException = true;
+        DisplayMenuProp::DisplayMenu();
     }
     if(HaveException == false) {
-        for(int i = 0; i < indexForId; i++) {
-            if(strID != items[i]) {
+        for(auto &i : items) {
+            if(to_string(propID) != i) {
                 NotInDatabase = true;
             } else {
                 NotInDatabase = false;
@@ -238,17 +231,17 @@ void CrudProp::DeleteProperties() {
             }
         }
 
-        if(NotInDatabase == false) {
-            string delete_query ="DELETE  FROM propertyproduct WHERE PropertyProductID = '" + to_string(propID) + "' ";
-            const char* qd = delete_query.c_str();
-            qstate = mysql_query(conn, qd);
+    if(NotInDatabase == false) {
+        string delete_query ="DELETE  FROM propertyproduct WHERE PropertyProductID = '" + to_string(propID) + "' ";
+        const char* qd = delete_query.c_str();
+        qstate = mysql_query(conn, qd);
 
-            if (!qstate) {
-                cout << endl << "Successfully Deletede From Database." << endl;
-            } else {
-                cout << "Failed tu Delete." << endl;
+        if (!qstate) {
+        cout << endl << "Successfully Deletede From Database." << endl;
+        } else {
+            cout << "Failed tu Delete." << endl;
             }
-        }
+    }
     } else {
     cout << "Not Found in Database." << endl;
     }

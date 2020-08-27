@@ -19,6 +19,7 @@ void DisplayMenuProp:: DisplayMenu() {
     << std:: endl << "9. Rename Category By Name\n ";
 
     int choice;
+    cout << "Enter your choice : " << endl;
     std::cin >> choice;
 
     switch(choice) {
@@ -37,21 +38,21 @@ void DisplayMenuProp:: DisplayMenu() {
             CrudProp::DeleteProperties();
             break;
         case 5:
-            CrudCategory::AddCategory(4,"Laptop-uri");
-            CrudCategory::AddCategory(5,"Asus");
-            CrudCategory::AddCategory(6,"Hp");
+            //CrudCategory::AddCategory(2,"Laptop-uri");
+            //CrudCategory::AddCategory(58,"Asus");
+            //CrudCategory::AddCategory(58,"Hp");
             break;
         case 6:
-            CrudCategory::RemoveCategoryById(4);
+            //CrudCategory::RemoveCategoryById(58);
             break;
         case 7:
-            CrudCategory::RemoveCategoryByName("Laptop-uri");
+            //CrudCategory::RemoveCategoryByName("Laptopuri");
             break;
         case 8:
-            CrudCategory::RenameCategoryById(5,"Asus UltraBooks");
+            //CrudCategory::RenameCategoryById(4,"Asus UltraBooks");
             break;
-        case 10:
-            CrudCategory::RenameCategoryByName("Asus", "Asus UltraBooks");
+        case 9:
+            //CrudCategory::RenameCategoryByName("Asus UltraBooks", "Asus");
             break;
     }
 }

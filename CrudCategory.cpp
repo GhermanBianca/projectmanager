@@ -63,22 +63,7 @@ void CrudCategory::RemoveCategoryById(int CategoryId) {
     int IdParent;
     vector<int> parent;
 
-    string findid_query = "SELECT CategoryID FROM category WHERE CategoryName = 'Laptop-uri' ";
-    const char* qf = findid_query.c_str();
-    qstate = mysql_query(conn, qf);
-
-    if(!qstate) {
-        res = mysql_store_result(conn);
-        cout << endl;
-        while ((row = mysql_fetch_row(res))) {
-            IdParent = atoi(row[0]);
-            cout << IdParent <<  endl;
-        }
-    } else {
-        cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
-    }
-
-    string findid_query1 = "SELECT Child FROM categorytocategory WHERE Parent = '"+ to_string(IdParent) +"'";
+    string findid_query1 = "SELECT Child FROM categorytocategory WHERE Parent = '"+ to_string(CategoryId) +"'";
     const char* qf1 = findid_query1.c_str();
     qstate = mysql_query(conn, qf1);
 
@@ -133,7 +118,7 @@ void CrudCategory::RemoveCategoryByName(const string &CategoryName) {
     int IdParent;
     vector<int> parent;
 
-    string findid_query = "SELECT CategoryID FROM category WHERE CategoryName = 'Laptop-uri' ";
+    string findid_query = "SELECT CategoryID FROM category WHERE CategoryName = '"+ CategoryName + "' ";
     const char* qf = findid_query.c_str();
     qstate = mysql_query(conn, qf);
 
@@ -202,7 +187,7 @@ void CrudCategory::RenameCategoryById(int CategoryId,const string &CategoryName 
 
     int IdParent;
 
-    string findid_query = "SELECT CategoryID FROM category WHERE CategoryName = 'Asus' ";
+    string findid_query = "SELECT CategoryID FROM category WHERE CategoryName = '"+ CategoryName +"' ";
     const char* qf = findid_query.c_str();
     qstate = mysql_query(conn, qf);
 
@@ -217,7 +202,7 @@ void CrudCategory::RenameCategoryById(int CategoryId,const string &CategoryName 
         cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
     }
 
-    string update_query = "UPDATE category SET CategoryName = '" + CategoryName + "' WHERE CategoryID = '" + to_string(IdParent) + "' ";
+    string update_query = "UPDATE category SET CategoryName = '" + CategoryName + "' WHERE CategoryID = '" + to_string(CategoryId) + "' ";
     const char* qu = update_query.c_str();
     qstate = mysql_query(conn, qu);
 
@@ -229,8 +214,6 @@ void CrudCategory::RenameCategoryById(int CategoryId,const string &CategoryName 
 }
 
 void CrudCategory::RenameCategoryByName(const string &CategoryName, const string &NewCategoryName) {
-
-    int IdParent;
 
     string update_query = "UPDATE category SET CategoryName = '" + NewCategoryName + "' WHERE CategoryName = '" + CategoryName + "' ";
     const char* qu = update_query.c_str();
