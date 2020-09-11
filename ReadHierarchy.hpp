@@ -10,11 +10,14 @@
 
 using namespace std;
 
-extern std::map <int, std::vector<int>> category_map;
-extern int depth;
+//extern std::map <int, std::vector<int>> category_map;
+//extern int depth;
 
 class ReadHierarchy {
  public: 
+
+    static std::map <int, std::vector<int>> category_map;
+    static int depth;
 
     static void PrintDepth(int depth);
     static void PrintCategory(int parent_id);

@@ -5,7 +5,7 @@ using namespace std;
 
 class DisplayMenuProp {
  public:
-    static void DisplayMenu();
+    static void DisplayMenu(int sockfd);
 };
 
 #endif

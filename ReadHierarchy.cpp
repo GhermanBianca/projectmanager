@@ -2,6 +2,7 @@
 #include "DbResponse.hpp"
 #include "DisplayMenuProp.hpp"
 
+
 #include <mysql/mysql.h>
 #include <cstdio>
 #include <vector>
@@ -11,8 +12,8 @@
 
 using namespace std;
 
-std::map <int, std::vector<int>> category_map;
-int depth;
+std::map <int, std::vector<int>> ReadHierarchy::category_map;
+int ReadHierarchy::depth;
 
 void ReadHierarchy::PrintDepth(int depth) {
   stringstream a; 
@@ -41,6 +42,7 @@ void ReadHierarchy::PrintCategory(int parent_id) {
 void ReadHierarchy::PrintChilds(int parent_id, std::vector<int> childs, int depth) {
   PrintDepth(depth); //aceasta functie va printa spatiile goale necesare identarii fiecarei categorii
   PrintCategory(parent_id); //aceasta functie va printa numele categoriei care are id-ul trimis ca argument
+
   for ( auto & el : childs) {
     PrintChilds(el, category_map[el], ++depth);
   }
